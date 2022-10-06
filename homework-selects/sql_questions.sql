@@ -167,10 +167,11 @@ FROM employees
 	
 --19. all the information of an employee whose id is any of the number 134, 159 and 183.
 
-SELECT * 
-FROM employees 
-    WHERE employee_id IN (134, 159, 183);
-	
+SELECT *
+FROM employees
+    WHERE employee_id IN (134, 159, 183)
+    FETCH NEXT 1 ROWS ONLY;
+
 --20. all the information of the employees whose salary is within the range of smallest salary and 2500.
 
 SELECT E.* 
@@ -215,7 +216,8 @@ FROM employees
 	
 --24. the employee number and name( first name and last name ) for all employees who work in a department with any employee whose name contains a T.
 
-SELECT first_name || ' ' || last_name as "FULL NAME"
+SELECT employee_id,
+    first_name || ' ' || last_name as "FULL NAME"
 FROM employees
     WHERE department_id IN (
         SELECT department_id
@@ -373,7 +375,7 @@ FROM employees
     WHERE salary > (
         SELECT salary
         FROM employees
-            WHERE last_name || ' ' || first_name LIKE '%Ozer%';
+            WHERE last_name || ' ' || first_name LIKE '%Ozer%'
     )
 
 --36. which employees have a manager who works for a department based in the US.
@@ -445,11 +447,11 @@ FROM employees
 --41. the department name and Id for all departments where they located, that Id is equal to the Id for the location where department number 30 is located.
 
 SELECT department_name, 
-    department_id
+    location_id
 FROM departments
     WHERE location_id = (
         SELECT location_id
-        FROM departments 
+        FROM departments
             WHERE department_id = 30
     )
 	
@@ -473,15 +475,10 @@ SELECT first_name,
     salary,
     department_id
 FROM employees
-    WHERE department_id = (
-        SELECT department_id
-        FROM employees
-            WHERE employee_id = 40
-    )
-    AND salary = (
+    WHERE salary IN (
         SELECT salary
         FROM employees
-            WHERE employee_id = 40
+            WHERE department_id = 40
     );
 	
 --44. the first and last name, salary, and department ID for those employees who earn more than the minimum salary of a department which ID is 40.
